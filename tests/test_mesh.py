@@ -48,19 +48,25 @@ class MeshTests(unittest.TestCase):
 class FaultyInputs(unittest.TestCase):
     """Check that faulty meshes are detected by the constructors."""
 
-    def runTest(self):
+    def test_point_belonging_to_no_element(self):
         with self.assertRaises(Exception):
             # point belonging to no element
             MeshTri(np.array([[0, 0], [0, 1], [1, 0], [1, 1]]).T,
                     np.array([[0, 1, 2]]).T)
+
+    def test_wrong_size_inputs(self):
         with self.assertRaises(Exception):
             # wrong size inputs (t not matching to Mesh type)
             MeshTet(np.array([[0, 0], [0, 1], [1, 0], [1, 1]]).T,
                     np.array([[0, 1, 2]]).T)
+
+    def test_inputting_transpose(self):
         with self.assertRaises(Exception):
             # inputting trasposes
             MeshTri(np.array([[0, 0], [0, 1], [1, 0], [1, 1]]),
                     np.array([[0, 1, 2], [1, 2, 3]]))
+
+    def test_floats_in_element_connectivity(self):
         with self.assertRaises(Exception):
             # floats in element connectivity
             MeshTri(np.array([[0, 0], [0, 1], [1, 0], [1, 1]]).T,
