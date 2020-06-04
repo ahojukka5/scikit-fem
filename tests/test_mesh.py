@@ -10,29 +10,39 @@ class MeshTests(unittest.TestCase):
     """Test some of the methods in mesh classes
     that are not tested elsewhere."""
 
-    def runTest(self):
+    def test_mesh_move_elements(self):
         # Mesh.remove_elements
         m = MeshTri()
         m.refine()
         M = m.remove_elements(np.array([0]))
         self.assertEqual(M.t.shape[1], 7)
 
+    def test_mesh_define_boundary(self):
         # Mesh.define_boundary
+        m = MeshTri()
+        m.refine()
         m.define_boundary('foo', lambda x: x[0] == 0.)
         self.assertEqual(m.boundaries['foo'].size, 2)
 
+    def test_mesh_define_boundary_internal(self):
         # Mesh.define_boundary (internal)
+        m = MeshTri()
+        m.refine()
         m.define_boundary('bar', lambda x: x[0] == 1./2, boundaries_only=False)
         self.assertEqual(m.boundaries['bar'].size, 2)
 
+    def test_mesh_scale(self):
         # Mesh.scale, Mesh.translate
         m = MeshHex()
         m.scale(0.5)
-        m.translate((0.5, 0.5, 0.5))
-        self.assertGreater(np.min(m.p), 0.4999)
-
         # Mesh3D.facets_satisfying
         self.assertEqual(len(m.facets_satisfying(lambda x: x[0] == 0.5)), 1)
+
+    def test_mesh_translate(self):
+        # Mesh.scale, Mesh.translate
+        m = MeshHex()
+        m.translate((0.5, 0.5, 0.5))
+        self.assertGreater(np.min(m.p), 0.4999)
 
 
 class FaultyInputs(unittest.TestCase):
